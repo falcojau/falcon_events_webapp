@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: falcon-events
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn core.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9 # O la versión que uses
+      - key: DJANGO_SETTINGS_MODULE
+        value: core.settings

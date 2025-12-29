@@ -1,0 +1,65 @@
+{% extends "general/layout.html" %}
+{% block head_title%}Home | Falcon Events{% endblock %}
+
+{% block page_content %}
+    {% include "_includes/_messages.html" %}
+    <h5>Falcon Events is a Gen Z events agency dedicated for men</h5>
+    <p>Made for men who want to achieve their best version</p>
+
+    <section class="categories-section" style="margin-bottom: 30px;">
+        <h5>Browse by Category</h5>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+            <a href="{% url 'event_list' %}" class="btn btn-outline-dark">All Events</a>
+            
+            {% for cat in categories %}
+                <a href="{% url 'category_detail' cat.slug %}" 
+                   class="btn btn-outline-primary" 
+                   style="border-radius: 20px; padding: 5px 20px;">
+                   {{ cat.name }}
+                   ({{ cat.event_count }})
+                </a>
+            {% empty %}
+                <p>No categories available yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="search-bar mb-5">
+        <h5>Find an Event</h5>
+        <form action="{% url 'home' %}" method="get" class="d-flex shadow-sm p-2 bg-white rounded">
+            <input name="q" class="form-control me-2 border-0" type="search" 
+               placeholder="Search by title or location..." 
+               value="{{ request.GET.q }}">
+            <button class="btn btn-primary px-4" type="submit">Search</button>
+        </form>
+    </section>
+
+{% if request.GET.q %}
+    <p class="text-muted">Results for: <strong>"{{ request.GET.q }}"</strong> 
+    <a href="{% url 'home' %}" class="small ms-2">Clear search</a></p>
+{% endif %}
+
+    <div class="row">
+    {% for event in events %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if event.image_event %}
+                    <img src="{{ event.image_event.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="text-muted small">📍 {{ event.location }}</p>
+                    <p class="card-text">{{ event.description|truncatechars:80 }}</p>
+                    <a href="{% url 'event_detail' event.pk %}" class="btn btn-sm btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="text-center py-5">
+            <h4>No events found matching your search </h4>
+            <p>Try different keywords or browse by category.</p>
+        </div>
+    {% endfor %}
+    </div>
+<hr>
+{% endblock %}

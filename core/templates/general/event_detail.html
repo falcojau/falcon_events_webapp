@@ -1,0 +1,64 @@
+{% extends "general/layout.html" %}
+{% block head_title%}Event Detail | {{ event.title }}{% endblock %}
+{% block page_title %}<h1>{{ event.title }}</h1>{% endblock %}
+
+{% block page_content %}
+{% include "_includes/_messages.html" %}
+<article style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+    
+    <p style="font-size: 1.2em; line-height: 1.6;">{{ event.description }}</p>
+    
+    <hr>
+    
+    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        <p><img width='250' src="{{ event.image_event.url }}"></p>
+        <p><strong>📅 When:</strong> {{ event.start_datetime|date:"d M Y, H:i" }}</p>
+        <p><strong>📍 Where:</strong> {{ event.location }}</p>
+        <p><strong>📂 Category:</strong> {{ event.category.name }}</p>
+        <p><strong>👤 Organized by:</strong> {{ event.created_by.username }}</p>
+    </div>
+
+    <div class="card p-4 mb-4 shadow-sm border-0" style="background-color: #f8f9fa;">
+    <h3>Registration</h3>
+    <hr>
+    
+    <div class="d-flex justify-content-between mb-3">
+        <span><strong>Total Capacity:</strong> {{ event.capacity }}</span>
+        <span class="badge {% if event.slots_left > 5 %}bg-success{% else %}bg-danger{% endif %}">
+            {{ event.slots_left }} spots available
+        </span>
+    </div>
+
+    {% if event.slots_left > 0 %}
+        {% if user.is_authenticated %}
+            <form action="{% url 'event_join' event.pk %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">How many guests you bring?</label>
+                    <input type="number" name="guests" value="0" min="0" 
+                           {% if event.slots_left < event.max_guests_per_user %}
+                                max="{{ event.slots_left|add:'-1' }}" 
+                            {% else %} max="{{ event.max_guests_per_user }}" {% endif %}
+                           class="form-control" style="width: 100px;">
+                    <small class="text-muted">Max guests allowed: <strong>{{ event.max_guests_per_user }}</strong></small>
+                    {% if event.slots_left <= event.max_guests_per_user %}
+                        <small class="text-danger">
+                            Note: Only {{ event.slots_left|add:"-1" }} spots left for guests!
+                        </small>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100">Join this event</button>
+            </form>
+        {% else %}
+            <div class="alert alert-warning py-2">
+                Please <a href="{% url 'login' %}" class="alert-link">Login</a> to reserve your spot.
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-danger text-center">
+            <strong>SOLD OUT!</strong>
+        </div>
+    {% endif %}
+    </div>
+</article>
+{% endblock %}

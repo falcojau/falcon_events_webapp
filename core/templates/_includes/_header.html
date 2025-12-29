@@ -1,0 +1,20 @@
+<header>
+    <h1>Falcon Events 🦅</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Home 🏠</a></li>
+            <li><a href="{% url 'event_list' %}">Agenda 📕​</a></li>
+    
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'my_events' %}">My Events</a></li>
+                <li><a href="{% url 'calendar' %}">Calendar 📅​</a></li>
+                <li><a href="{% url 'logout' %}">Exit 🚪​</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login 🔑</a></li>
+                <li><a href="{% url 'register' %}">Sign Up 📝</a></li>
+            {% endif %}
+
+            <li><a href="{% url 'contact' %}">Contact Us 📞</a></li>
+        </ul>
+    </nav>
+</header>

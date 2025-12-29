@@ -1,0 +1,41 @@
+{% extends "general/layout.html" %}
+{% block head_title%}Agenda | Falcon Events{% endblock %}
+{% block page_title %}<h1>Agenda 📕​</h1>{% endblock %}
+
+{% block page_content %}
+<hr>
+<div class="row">
+    {% for event in events %}
+        <div class="col-md-4 mb-4">
+            <article class="card h-100 shadow-sm" style="padding: 15px;">
+                <h4>{{ event.title }}</h4>
+                
+                {% if event.image_event %}
+                    <p class="text-center">
+                        <img class="img-fluid rounded" style="height: 200px; object-fit: cover;" src="{{ event.image_event.url }}" alt="{{ event.title }}">
+                    </p>
+                {% endif %}
+
+                <p class="text-muted small"><strong>When:</strong> {{ event.start_datetime|date:"d M Y, H:i" }}</p>
+                <p>{{ event.description|truncatechars:100 }}</p>
+                <p><strong>Where:</strong> {{ event.location }}</p>
+
+                <div class="mt-auto">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'event_detail' event.pk %}" class="btn btn-secondary w-100">View Details</a>
+                    {% else %}
+                        <div class="alert alert-dark small" role="alert">
+                            If you want to join, please 
+                            <a href="{% url 'login' %}">Login</a>.
+                        </div>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <p>No events found. Stay tuned for upcoming events! 🦅</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

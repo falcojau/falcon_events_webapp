@@ -1,0 +1,44 @@
+{% extends "general/layout.html" %}
+{% block head_title%}My Events | Falcon Events{% endblock %}
+{% block page_title %}<h1>My Events</h1>{% endblock %}
+
+{% block page_content %}
+{% include "_includes/_messages.html" %}
+    <h3 class="mt-4">Upcoming Events</h3>
+    <div class="list-group mb-5">
+        {% for reg in upcoming_events %}
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5><a href="{% url 'event_detail' reg.event.pk %}">{{ reg.event.title }}</a></h5>
+                    <span class="badge bg-success">Confirmed</span>
+                </div>
+                <p class="mb-1"><strong>Date:</strong> {{ reg.event.start_datetime|date:"M d, Y - H:i" }}</p>
+                <p class="mb-1"><strong>Guests:</strong> {{ reg.guests }}</p>
+                
+                <div class="mt-2">
+                    <a href="{% url 'event_detail' reg.event.pk %}" class="btn btn-sm btn-outline-secondary">View Details</a>
+                    
+                    <form action="{% url 'cancel_registration' reg.pk %}" method="post" style="display:inline;" 
+                          onsubmit="return confirm('Are you sure you want to cancel your spot?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Cancel Registration</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted">There are not upcoming events. <a href="{% url 'event_list' %}">Find one here!</a></p>
+        {% endfor %}
+    </div>
+
+    <h3 class="text-muted">Past Events</h3>
+    <div class="list-group">
+        {% for reg in past_events %}
+            <div class="list-group-item list-group-item-light">
+                <h5 class="mb-1 text-muted">{{ reg.event.title }}</h5>
+                <small>Attended on: {{ reg.event.start_datetime|date:"M d, Y" }}</small>
+            </div>
+        {% empty %}
+            <p class="text-muted small">No history found.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

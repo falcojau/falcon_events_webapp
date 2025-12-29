@@ -1,0 +1,22 @@
+{% extends "general/layout.html" %}
+{% block head_title%}Sign Up | Falcon Events{% endblock %}
+{% block page_title %}<h1>Sign Up 📝</h1>{% endblock %}
+{% load crispy_forms_tags %}
+{% block page_content %}
+{% include "_includes/_messages.html" %}
+<div class="container">
+        <form action="" method="post">
+            {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        {{ form.first_name|as_crispy_field }}
+                        {{ form.last_name|as_crispy_field }}
+                        {{ form.email|as_crispy_field }}
+                        {{ form.username|as_crispy_field }}
+                        {{ form.password|as_crispy_field }}
+                    </div>
+                </div>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+</div>
+{% endblock %}
