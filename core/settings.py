@@ -27,7 +27,12 @@ SECRET_KEY = 'django-insecure-t1mqyy_m8e+(w@hb=hjs^5^nsds(0!^b&a4@2ezj51=ko1a2%t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['falcon-events-webapp.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'falcon-events-webapp.onrender.com', 
+    '.onrender.com', 
+    'localhost', 
+    '127.0.0.1'
+    ]
 
 
 # Application definition
